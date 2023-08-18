@@ -3,7 +3,46 @@
   line-height: 24px;
   border-radius: 12px;
   min-width: 44px;
+  cursor: pointer;
+  display: inline-flex;
+  position: relative;
+  background-color: #c5c5c5;
+  .le-switch__content {
+    font-size: 9px;
+    color: white;
+    width: 100%;
+    padding: 0 8px 0 24px;
+    user-select: none;
+    transition: padding 0.2s;
+  }
+  .le-switch__handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 2px;
+    left: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.38, 0, 0.24, 1);
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 50%;
+      background-color: white;
+    }
+  }
 }
 .le-switch-checked {
   background: #00cca2;
+  .le-switch__handle {
+    left: calc(100% - 22px);
+  }
+  .le-switch__content {
+    padding: 0 24px 0 8px;
+  }
 }

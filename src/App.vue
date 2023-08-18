@@ -1,11 +1,9 @@
 <template>
-  <div>
+  <div class="">
     <Switch></Switch>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import Switch from '@/example/switch.vue';
 </script>
-
-<style></style>
