@@ -13,6 +13,9 @@
     <div>
       <Dialog></Dialog>
     </div>
+    <div>
+      <Message></Message>
+    </div>
   </div>
 </template>
 
@@ -21,6 +24,7 @@ import Switch from '@/example/switch.vue';
 import Table from '@/example/table.vue';
 import Checkbox from '@/example/checkbox.vue';
 import Dialog from '@/example/dialog.vue';
+import Message from '@/example/message.vue';
 </script>
 
 <style lang="less">
