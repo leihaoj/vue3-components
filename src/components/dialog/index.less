@@ -1,0 +1,135 @@
+.le-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  .le-dialog-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  .le-dialog-body {
+    width: 400px;
+    height: 200px;
+    background-color: #303030;
+    border-radius: 4px;
+    position: relative;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    .le-dialog-close {
+      width: 20px;
+      height: 20px;
+      border-radius: 2px;
+      background-color: rgb(250, 250, 250);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .le-dialog-header {
+      height: 22px;
+    }
+    .le-dialog-content {
+      flex: 1;
+    }
+    .le-dialog-footer {
+      text-align: right;
+    }
+  }
+  .le-dialog-body-center {
+  }
+}
+.le-dialog-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.le-dialog-top {
+  display: flex;
+  justify-content: center;
+  .le-dialog-body-top {
+    margin-top: 100px;
+  }
+}
+.le-dialog-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  .le-dialog-body-bottom {
+    margin-bottom: 100px;
+  }
+}
+// @keyframes dialog-animation-zoom {
+//   0% {
+//     transform: scale(0.5);
+//   }
+//   100% {
+//     transform: scale(1);
+//   }
+// }
+.le-dialog-default-transition-enter-active,
+.le-dialog-default-transition-leave-active {
+  transition: all 0.4s ease;
+}
+.le-dialog-default-transition-enter-from,
+.le-dialog-default-transition-leave-to {
+  opacity: 0;
+}
+.le-dialog-default-transition-enter-to,
+.le-dialog-default-transition-leave-from {
+  opacity: 1;
+}
+
+// Transition-居中
+.dialog-animation-center-enter-active,
+.dialog-animation-center-leave-active {
+  transition: all 0.4s ease;
+}
+.dialog-animation-center-enter-from,
+.dialog-animation-center-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
+}
+.dialog-animation-center-enter-to,
+.dialog-animation-center-leave-from {
+  opacity: 1;
+  transform: scale(1);
+}
+
+// Transition-顶部
+.dialog-animation-top-enter-active,
+.dialog-animation-top-leave-active {
+  transition: all 0.4s ease;
+}
+.dialog-animation-top-enter-from,
+.dialog-animation-top-leave-to {
+  transform: translate(0, -100px);
+}
+.dialog-animation-top-enter-to,
+.dialog-animation-top-leave-from {
+  transform: translate(0);
+}
+
+// Transition-底部
+.dialog-animation-bottom-enter-active,
+.dialog-animation-bottom-leave-active {
+  transition: all 0.4s ease;
+}
+.dialog-animation-bottom-enter-from,
+.dialog-animation-bottom-leave-to {
+  transform: translate(0, 100px);
+}
+.dialog-animation-bottom-enter-to,
+.dialog-animation-bottom-leave-from {
+  transform: translate(0);
+}
