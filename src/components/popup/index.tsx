@@ -11,6 +11,7 @@ import {
 } from 'vue';
 import { getDomClientRect } from '@/utils/tools/dom';
 import { containsValue } from '@/utils/tools';
+import Container from './container';
 
 export default defineComponent({
   props: {
@@ -247,6 +248,7 @@ export default defineComponent({
     );
 
     onMounted(() => {
+      console.log(slots.default());
       window.addEventListener('click', popupEvent);
     });
 
@@ -270,7 +272,9 @@ export default defineComponent({
                   visibility: visibility.value,
                 }}
               >
-                <div class="le-popup-content"></div>
+                <div class="le-popup-content">
+                  {slots.body ? slots.body() : ''}
+                </div>
               </div>
             </Transition>
           </Teleport>
@@ -285,6 +289,9 @@ export default defineComponent({
         >
           {slots.default ? slots.default() : ''}
         </div>
+        <Container>
+          <div>你好</div>
+        </Container>
       </>
     );
   },

@@ -17,6 +17,7 @@
       <Message></Message>
     </div>
     <Popup></Popup>
+    <ToolTip></ToolTip>
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import Checkbox from '@/example/checkbox.vue';
 import Dialog from '@/example/dialog.vue';
 import Message from '@/example/message.vue';
 import Popup from '@/example/popup.vue';
+import ToolTip from '@/example/tooltip.vue';
 </script>
 
 <style lang="less">
