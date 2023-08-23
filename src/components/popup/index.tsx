@@ -57,6 +57,7 @@ export default defineComponent({
   emits: ['update:modelValue', 'close'],
   setup(props, { emit, slots }) {
     let animationTimeout: any = null;
+    let debounceTimeout: any = null;
     // popup与触发元素的距离
     const distance = 8;
     // 动画时长
@@ -92,6 +93,13 @@ export default defineComponent({
       animationTimeout = null;
     };
 
+    // 清空
+    const closeDebounceTimeout = () => {
+      window.clearTimeout(debounceTimeout);
+      clearTimeout(debounceTimeout);
+      debounceTimeout = null;
+    };
+
     // 全局点击事件，判断点击的元素是否包含popup
     const popupEvent = (event: Event) => {
       if (
@@ -107,8 +115,12 @@ export default defineComponent({
     };
 
     // popup改变状态
-    const popupStatusChange = () => {
-      visible.value = !visible.value;
+    const popupStatusChange = (status: boolean | null = null) => {
+      if (typeof status === 'boolean') {
+        visible.value = status;
+      } else {
+        visible.value = !visible.value;
+      }
       if (!visible.value) {
         popupHideEvent();
       }
@@ -125,22 +137,16 @@ export default defineComponent({
       }, animationDuration);
     };
 
-    // 鼠标进入
-    const handleMouseEnter = () => {
-      const { trigger } = props;
-      // hover类型才触发
-      if (trigger === 'hover') {
-        popupStatusChange();
-      }
-    };
-
-    // 鼠标离开
-    const handleMouseLeave = () => {
-      const { trigger } = props;
-      // hover类型才触发
-      if (trigger === 'hover') {
-        popupStatusChange();
-      }
+    // 鼠标进入和离开
+    const handleMouseEvent = (status: boolean) => {
+      closeDebounceTimeout();
+      debounceTimeout = window.setTimeout(() => {
+        const { trigger } = props;
+        // hover类型才触发
+        if (trigger === 'hover') {
+          popupStatusChange(status);
+        }
+      }, 200);
     };
 
     // 触发元素的点击事件
@@ -274,8 +280,8 @@ export default defineComponent({
         <div
           ref={slotsDefaultRef}
           onClick={slotDefaultClick}
-          onMouseenter={handleMouseEnter}
-          onMouseleave={handleMouseLeave}
+          onMouseenter={handleMouseEvent.bind(this, true)}
+          onMouseleave={handleMouseEvent.bind(this, false)}
         >
           {slots.default ? slots.default() : ''}
         </div>
