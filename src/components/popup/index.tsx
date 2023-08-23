@@ -19,6 +19,11 @@ export default defineComponent({
       type: String,
       default: 'body',
     },
+    // popup显示的条件
+    trigger: {
+      type: String,
+      default: 'hover',
+    },
     // 位置
     placement: {
       type: String,
@@ -94,6 +99,14 @@ export default defineComponent({
       }
     };
 
+    // popup改变状态
+    const popupStatusChange = () => {
+      visible.value = !visible.value;
+      if (!visible.value) {
+        popupHideEvent();
+      }
+    };
+
     // 隐藏popup时要执行的事件
     const popupHideEvent = () => {
       closeAnimationTimeout();
@@ -102,15 +115,32 @@ export default defineComponent({
       }, animationDuration);
     };
 
+    // 鼠标进入
+    const handleMouseEnter = () => {
+      const { trigger } = props;
+      // hover类型才触发
+      if (trigger === 'hover') {
+        popupStatusChange();
+      }
+    };
+
+    // 鼠标离开
+    const handleMouseLeave = () => {
+      const { trigger } = props;
+      // hover类型才触发
+      if (trigger === 'hover') {
+        popupStatusChange();
+      }
+    };
+
     // 触发元素的点击事件
     const slotDefaultClick = (event: Event) => {
-      if (
-        slotsDefaultRef.value &&
-        slotsDefaultRef.value.contains(event.target as Node)
-      ) {
-        visible.value = !visible.value;
-        if (!visible.value) {
-          popupHideEvent();
+      if (props.trigger === 'click') {
+        if (
+          slotsDefaultRef.value &&
+          slotsDefaultRef.value.contains(event.target as Node)
+        ) {
+          popupStatusChange();
         }
       }
     };
@@ -222,7 +252,12 @@ export default defineComponent({
             </div>
           </Transition>
         </Teleport>
-        <div ref={slotsDefaultRef} onClick={slotDefaultClick}>
+        <div
+          ref={slotsDefaultRef}
+          onClick={slotDefaultClick}
+          onMouseenter={handleMouseEnter}
+          onMouseleave={handleMouseLeave}
+        >
           {slots.default ? slots.default() : ''}
         </div>
       </>
