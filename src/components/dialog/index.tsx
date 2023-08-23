@@ -1,5 +1,5 @@
 import './index.less';
-import { Teleport, defineComponent, computed, watch, Transition } from 'vue';
+import { Teleport, defineComponent, computed, Transition } from 'vue';
 import CloseSvg from '@/assets/svg/close.svg';
 import Button from '@/components/button';
 
@@ -38,14 +38,6 @@ export default defineComponent({
         emit('update:modelValue', value);
       },
     });
-    watch(
-      () => props.modelValue,
-      (v) => {
-        if (v !== visible.value) {
-          visible.value = v;
-        }
-      }
-    );
 
     // 关闭
     const onClose = (close: boolean = true) => {

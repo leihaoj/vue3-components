@@ -16,6 +16,7 @@
     <div>
       <Message></Message>
     </div>
+    <Popup></Popup>
   </div>
 </template>
 
@@ -25,6 +26,7 @@ import Table from '@/example/table.vue';
 import Checkbox from '@/example/checkbox.vue';
 import Dialog from '@/example/dialog.vue';
 import Message from '@/example/message.vue';
+import Popup from '@/example/popup.vue';
 </script>
 
 <style lang="less">
