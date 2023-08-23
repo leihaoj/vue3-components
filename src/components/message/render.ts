@@ -1,13 +1,20 @@
-import { h, render, createApp, App } from 'vue';
+import { h, createApp, ref } from 'vue';
 import Message from './index';
 import { messageProps, factory } from './type';
 
 const messages: factory[] = [];
 
+// 设置messageProps的默认值
+const defaultMessage: messageProps = {
+  content: '',
+  clear: true,
+};
+
 function createMessage(params: messageProps) {
+  const messageRef = ref(null);
   const app = createApp({
     render() {
-      return h(Message, params);
+      return h(Message, { ref: messageRef, ...params });
     },
   });
   const container = document.createElement('div');
@@ -16,43 +23,42 @@ function createMessage(params: messageProps) {
   return {
     app: app,
     container: container,
+    messageRef: messageRef,
   };
 }
 
-export const showMessage = ({ content, type, duration }: messageProps) => {
+export const showMessage = (message: messageProps) => {
   // 销毁实例
-  const destroyFn = (index: number) => {
+  const destroyFn = (index: number, clear: boolean = false) => {
     let currentApp = messages[index];
-    currentApp.app.unmount();
-    document.body.removeChild(currentApp.container);
-    // 断开对象与引用的联系(等待垃圾回收机制自动回收)
-    messages[index] = null;
+    if (currentApp) {
+      // 注销setTimeout事件
+      if (clear) {
+        const refs = currentApp.messageRef.value;
+        if (refs.closeDestroyTimeout) {
+          refs.closeDestroyTimeout();
+        }
+      }
+      currentApp.app.unmount();
+      document.body.removeChild(currentApp.container);
+    }
     // 最后一条准备销毁
     if (index == messages.length - 1) {
-      // 当所有的实例都为null时，清空数组
-      let nullNum = 0;
-      messages.forEach((item: factory) => {
-        if (item === null) {
-          nullNum += 1;
-        }
-      });
-      if (nullNum === messages.length) {
-        messages.length = 0;
-        console.log('已全部销毁');
-      }
+      messages.length = 0;
     }
   };
-  let params: messageProps = {
-    content: content,
-    destroyFn: destroyFn,
-    index: messages.length,
-  };
-  if (type) {
-    params.type = type;
+  // 参数合并
+  const params: messageProps = { ...defaultMessage, ...message };
+  // 销毁之前的实例
+  if (params.clear) {
+    for (let i = 0; i < messages.length; i++) {
+      destroyFn(i, true);
+    }
   }
-  if (duration) {
-    params.duration = duration;
-  }
+  params.index = messages.length;
+  params.destroyFn = destroyFn;
+
+  // 创建工厂函数
   const result = createMessage(params);
   messages.push(result);
   result.app.mount(result.container);

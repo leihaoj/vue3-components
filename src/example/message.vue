@@ -11,7 +11,8 @@ import { showMessage } from '@/components/message/render';
 const onMessage = () => {
   showMessage({
     content: '你好',
-    // type: 'success',
+    type: 'problem',
+    clear: false,
   });
 };
 const onMessage2 = () => {
