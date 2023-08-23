@@ -1,6 +1,6 @@
 <template>
   <div style="margin: 200px">
-    <Popup v-model="popupVisible" :placement="placement">
+    <Popup :destroyOnClose="true" v-model="popupVisible" :placement="placement">
       <button>打开popup</button>
     </Popup>
   </div>

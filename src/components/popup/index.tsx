@@ -19,6 +19,11 @@ export default defineComponent({
       type: String,
       default: 'body',
     },
+    // 隐藏时是否销毁元素
+    destroyOnClose: {
+      type: Boolean,
+      default: false,
+    },
     // popup显示的条件
     trigger: {
       type: String,
@@ -64,6 +69,8 @@ export default defineComponent({
     const visibility = ref<'visible' | 'hidden'>(
       props.modelValue ? 'visible' : 'hidden'
     );
+    // 元素是否加载
+    const popupLoad = ref(props.destroyOnClose ? false : true);
     // x轴位置
     const popupX = ref(0);
     // y轴位置
@@ -112,6 +119,9 @@ export default defineComponent({
       closeAnimationTimeout();
       animationTimeout = window.setTimeout(() => {
         visibility.value = 'hidden';
+        if (props.destroyOnClose) {
+          popupLoad.value = false;
+        }
       }, animationDuration);
     };
 
@@ -150,7 +160,7 @@ export default defineComponent({
       const dom = slotsDefaultRef.value;
       if (dom && dom.children) {
         const client: DOMRect | boolean = getDomClientRect(dom.children[0]);
-        let popupClient: DOMRect | boolean = getDomClientRect(popupRef.value);
+        const popupClient: DOMRect | boolean = getDomClientRect(popupRef.value);
         if (client) {
           const { placement } = props;
           // 同类项操作
@@ -216,8 +226,13 @@ export default defineComponent({
       () => visible.value,
       (v) => {
         if (v) {
+          if (props.destroyOnClose) {
+            popupLoad.value = true;
+          }
           closeAnimationTimeout();
-          calculatePopupPosition();
+          setTimeout(() => {
+            calculatePopupPosition();
+          }, 0);
           visibility.value = 'visible';
         } else {
           popupHideEvent();
@@ -235,23 +250,27 @@ export default defineComponent({
 
     return () => (
       <>
-        <Teleport to={props.attach}>
-          <Transition name="le-popup-transition">
-            <div
-              class={[
-                'le-popup',
-                visible.value ? 'le-popup-enter' : 'le-popup-leave',
-              ]}
-              ref={popupRef}
-              style={{
-                transform: `translate(${popupX.value}px,${popupY.value}px)`,
-                visibility: visibility.value,
-              }}
-            >
-              <div class="le-popup-content"></div>
-            </div>
-          </Transition>
-        </Teleport>
+        {popupLoad.value ? (
+          <Teleport to={props.attach}>
+            <Transition name="le-popup-transition">
+              <div
+                class={[
+                  'le-popup',
+                  visible.value ? 'le-popup-enter' : 'le-popup-leave',
+                ]}
+                ref={popupRef}
+                style={{
+                  transform: `translate(${popupX.value}px,${popupY.value}px)`,
+                  visibility: visibility.value,
+                }}
+              >
+                <div class="le-popup-content"></div>
+              </div>
+            </Transition>
+          </Teleport>
+        ) : (
+          ''
+        )}
         <div
           ref={slotsDefaultRef}
           onClick={slotDefaultClick}
