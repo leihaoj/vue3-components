@@ -1,3 +1,5 @@
+export type TextAlign = 'left' | 'center' | 'right';
+
 export interface RulesType {
   required?: boolean;
   type?: string;

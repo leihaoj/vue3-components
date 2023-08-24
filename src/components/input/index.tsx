@@ -7,14 +7,13 @@ import {
   watch,
   onMounted,
   PropType,
+  computed,
 } from 'vue';
-import { RulesType } from './type';
+import { RulesType, TextAlign } from './type';
 import PrivatePwdSvg from '@/assets/svg/login/privatePwd.svg';
 import PublicPwdSvg from '@/assets/svg/login/publicPwd.svg';
 
 const emailReg = /^\w{3,}(\.\w+)*@[A-z0-9]+(\.[A-z]{2,8}){1,2}$/;
-
-type TextAlign = 'left' | 'center' | 'right';
 
 export default defineComponent({
   props: {
@@ -95,7 +94,15 @@ export default defineComponent({
     'inputBlur',
   ],
   setup(props, { emit, slots }) {
-    const input_value = ref<string | number>(props.modelValue);
+    const inputValue = computed({
+      get() {
+        return props.modelValue;
+      },
+      set(value: string | number) {
+        FormValidation();
+        emit('update:modelValue', value);
+      },
+    });
     // element
     const customInput = ref<HTMLInputElement>();
     // 是否聚焦
@@ -108,14 +115,14 @@ export default defineComponent({
     const input_type = ref<string>('text');
     // 当输入框类型为password时，展示私有密码svg
     const passwordCurrentType = ref<string>('private');
-    // 输入框校验
+    // 输入框输入校验
     const numberInput = (e: string | number) => {
       const { type } = props;
       if (type == 'number') {
-        input_value.value = (e + '').replace(/[^\d]/g, '');
+        inputValue.value = (e + '').replace(/[^\d]/g, '');
       }
       // 提交输入事件
-      emit('inputChange', input_value.value);
+      emit('inputChange', inputValue.value);
     };
     // 聚焦事件
     const onInputFocus = () => {
@@ -128,7 +135,7 @@ export default defineComponent({
       if (props.needSelect) {
         input_focus.value = false;
       }
-      emit('inputBlur', input_value.value, props.id);
+      emit('inputBlur', inputValue.value, props.id);
     };
     // 错误状态
     const errorinput = (rule: any) => {
@@ -164,7 +171,7 @@ export default defineComponent({
     // 表单校验
     const FormValidation = () => {
       const { rules } = props;
-      let v = input_value.value;
+      let v = inputValue.value;
       if (rules) {
         for (let i in rules) {
           let rule: any = rules[i];
@@ -206,21 +213,6 @@ export default defineComponent({
       }
     };
 
-    watch(
-      () => input_value.value,
-      (v) => {
-        emit('update:modelValue', v);
-        // 判断输入的内容是否符合校验规则
-        // 校验
-        FormValidation();
-      }
-    );
-    watch(
-      () => props.modelValue,
-      (v) => {
-        input_value.value = v;
-      }
-    );
     //
     watch(
       () => props.num,
@@ -294,13 +286,13 @@ export default defineComponent({
           <input
             ref={customInput}
             type={input_type.value}
-            v-model={input_value.value}
+            v-model={inputValue.value}
             class="cust-input"
             disabled={props.disabled}
             placeholder={props.placeholder}
             onFocus={onInputFocus}
             onBlur={onInputBlur}
-            onInput={numberInput.bind(this, input_value.value)}
+            onInput={numberInput.bind(this, inputValue.value)}
             style={{
               'text-align': props.align,
               borderRadius: props.borderRadius,
