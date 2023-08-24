@@ -18,16 +18,20 @@ import { dataType } from '@/utils/tools/index';
 function useElement<T = HTMLElement>(
   getter: (instance: ComponentInternalInstance) => T
 ) {
-  const instance = getCurrentInstance();
+  const instance: ComponentInternalInstance | null = getCurrentInstance();
   const el = ref<T>();
 
   onMounted(() => {
-    el.value = getter(instance);
+    if (instance) {
+      el.value = getter(instance);
+    }
   });
   onUpdated(() => {
-    const newEl = getter(instance);
-    if (el.value !== newEl) {
-      el.value = newEl;
+    if (instance) {
+      const newEl = getter(instance);
+      if (el.value !== newEl) {
+        el.value = newEl;
+      }
     }
   });
 
@@ -36,7 +40,7 @@ function useElement<T = HTMLElement>(
 
 function filterEmpty(children: VNode[] = []) {
   const vnodes: VNode[] = [];
-  children.forEach((child) => {
+  children.forEach((child: any) => {
     if (dataType(child, 'array')) {
       vnodes.push(...child);
     } else if (child.type === Fragment) {
@@ -50,7 +54,7 @@ function filterEmpty(children: VNode[] = []) {
       !(
         c &&
         (c.type === Comment ||
-          (c.type === Fragment && c.children.length === 0) ||
+          (c.type === Fragment && c.children && c.children.length === 0) ||
           (c.type === Text && (c.children as string).trim() === ''))
       )
   );
