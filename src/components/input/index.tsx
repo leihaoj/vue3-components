@@ -99,20 +99,20 @@ export default defineComponent({
         return props.modelValue;
       },
       set(value: string | number) {
-        FormValidation();
+        formValidation();
         emit('update:modelValue', value);
       },
     });
     // element
     const customInput = ref<HTMLInputElement>();
     // 是否聚焦
-    const input_focus = ref(false);
+    const inputFocus = ref(false);
     // 校验显示的错误
     const ruleError = reactive({
       status: false,
       message: '',
     });
-    const input_type = ref<string>('text');
+    const inputType = ref<string>('text');
     // 当输入框类型为password时，展示私有密码svg
     const passwordCurrentType = ref<string>('private');
     // 输入框输入校验
@@ -127,13 +127,13 @@ export default defineComponent({
     // 聚焦事件
     const onInputFocus = () => {
       if (props.needSelect) {
-        input_focus.value = true;
+        inputFocus.value = true;
       }
     };
     // 失去焦点
     const onInputBlur = () => {
       if (props.needSelect) {
-        input_focus.value = false;
+        inputFocus.value = false;
       }
       emit('inputBlur', inputValue.value, props.id);
     };
@@ -145,18 +145,18 @@ export default defineComponent({
       emit('submitType', false);
     };
     // 提交用户的账号密码
-    const QuickInputAccount = (item: any) => {
+    const quickInputAccount = (item: any) => {
       emit('submitAccount', item);
     };
     // 重置输入框状态
-    const ResetInput = () => {
+    const resetInput = () => {
       ruleError.status = false;
       ruleError.message = '';
       // 提交通过信息
       emit('submitType', true);
     };
     if (props.type == 'password') {
-      input_type.value = props.type;
+      inputType.value = props.type;
     }
 
     //
@@ -166,10 +166,10 @@ export default defineComponent({
       } else {
         passwordCurrentType.value = 'private';
       }
-      input_type.value = value;
+      inputType.value = value;
     };
     // 表单校验
-    const FormValidation = () => {
+    const formValidation = () => {
       const { rules } = props;
       let v = inputValue.value;
       if (rules) {
@@ -180,7 +180,7 @@ export default defineComponent({
             errorinput(rule);
             return;
           } else {
-            ResetInput();
+            resetInput();
           }
           // 自定义校验逻辑
           if (rule.validator) {
@@ -189,7 +189,7 @@ export default defineComponent({
               errorinput(res);
               return;
             } else {
-              ResetInput();
+              resetInput();
             }
           }
           // 邮箱验证模块
@@ -199,7 +199,7 @@ export default defineComponent({
               errorinput(rule);
               return;
             } else {
-              ResetInput();
+              resetInput();
             }
           }
           // 输入框最小长度校验
@@ -207,20 +207,11 @@ export default defineComponent({
             errorinput(rule);
             return;
           } else {
-            ResetInput();
+            resetInput();
           }
         }
       }
     };
-
-    //
-    watch(
-      () => props.num,
-      () => {
-        // 校验
-        FormValidation();
-      }
-    );
 
     // 自动聚焦
     onMounted(() => {
@@ -230,11 +221,17 @@ export default defineComponent({
     });
 
     watch(
+      () => props.num,
+      () => {
+        // 校验
+        formValidation();
+      }
+    );
+
+    watch(
       () => props.blurNum,
       () => {
-        if (customInput.value) {
-          customInput.value.focus();
-        }
+        customInput.value && customInput.value.focus();
       }
     );
 
@@ -285,7 +282,7 @@ export default defineComponent({
           )}
           <input
             ref={customInput}
-            type={input_type.value}
+            type={inputType.value}
             v-model={inputValue.value}
             class="cust-input"
             disabled={props.disabled}
@@ -301,13 +298,13 @@ export default defineComponent({
           {showPasswordIconOnRight()}
           {slots.rightIcon ? slots.rightIcon() : ''}
           <Transition name="remember-fade">
-            {props.needSelect && input_focus && props.selectList.length ? (
+            {props.needSelect && inputFocus.value && props.selectList.length ? (
               <div class="remember-select-box">
                 {props.selectList.map((item: any) => (
                   <div
                     key={item.account}
                     class="line"
-                    onClick={QuickInputAccount.bind(this, item)}
+                    onClick={quickInputAccount.bind(this, item)}
                   >
                     <div class="account">{item.account}</div>
                     <div class="password">********</div>
