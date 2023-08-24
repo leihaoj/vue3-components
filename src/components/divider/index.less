@@ -1,0 +1,69 @@
+// 线条的颜色
+@divider-color: #e7e7e7;
+// 线条粗细
+@divider-size: 1px;
+// 线条多的部分
+@divider-many: 95%;
+// 线条少的部分
+@divider-few: 5%;
+
+.le-divider {
+  .le-divider-text {
+    white-space: nowrap;
+    margin: 0 12px;
+    color: #444444;
+  }
+  &::before,
+  &::after {
+    height: @divider-size;
+    content: '';
+    display: inline-block;
+    background-color: @divider-color;
+  }
+}
+
+// 水平
+.le-divider-horizontal {
+  display: flex;
+  align-items: center;
+}
+
+// 垂直
+.le-divider-vertical {
+  display: inline-flex;
+  align-items: center;
+  &::before {
+    content: none;
+  }
+  &::after {
+    height: 12px;
+    width: 1px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
+
+.le-divider-center {
+  &::before,
+  &::after {
+    width: 50%;
+  }
+}
+
+.le-divider-left {
+  &::before {
+    width: @divider-few;
+  }
+  &::after {
+    width: @divider-many;
+  }
+}
+
+.le-divider-right {
+  &::before {
+    width: @divider-many;
+  }
+  &::after {
+    width: @divider-few;
+  }
+}

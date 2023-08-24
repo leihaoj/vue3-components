@@ -19,6 +19,7 @@
     <Popup></Popup>
     <ToolTip></ToolTip>
     <Input></Input>
+    <Divider></Divider>
   </div>
 </template>
 
@@ -31,6 +32,7 @@ import Message from '@/example/message.vue';
 import Popup from '@/example/popup.vue';
 import ToolTip from '@/example/tooltip.vue';
 import Input from '@/example/input.vue';
+import Divider from '@/example/divider.vue';
 </script>
 
 <style lang="less">
