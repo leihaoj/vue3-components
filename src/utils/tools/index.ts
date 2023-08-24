@@ -47,3 +47,16 @@ export const containsValue = (list: any[], value: any) => {
   }
   return false;
 };
+
+export const dataType = (data: any, type: 'string' | 'array' | 'object') => {
+  // 基本数据类型
+  if (containsValue(['string', 'number'], type)) {
+    return typeof data === type;
+  }
+  const call = Object.prototype.toString;
+  if (type === 'array') {
+    return call.call(data) === '[object Array]';
+  } else if (type == 'object') {
+    return call.call(data) === '[object Object]';
+  }
+};

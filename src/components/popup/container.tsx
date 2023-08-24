@@ -8,7 +8,12 @@ import {
   ComponentInternalInstance,
   PropType,
   watch,
+  VNode,
+  Fragment,
 } from 'vue';
+import { useResizeObserver } from '@/hooks/useResizeObserver';
+import { isRectChanged } from '@/utils/tools/dom';
+import { dataType } from '@/utils/tools/index';
 
 function useElement<T = HTMLElement>(
   getter: (instance: ComponentInternalInstance) => T
@@ -28,8 +33,31 @@ function useElement<T = HTMLElement>(
 
   return el;
 }
+
+function filterEmpty(children: VNode[] = []) {
+  const vnodes: VNode[] = [];
+  children.forEach((child) => {
+    if (dataType(child, 'array')) {
+      vnodes.push(...child);
+    } else if (child.type === Fragment) {
+      vnodes.push(...filterEmpty(child.children as VNode[]));
+    } else {
+      vnodes.push(child);
+    }
+  });
+  return vnodes.filter(
+    (c) =>
+      !(
+        c &&
+        (c.type === Comment ||
+          (c.type === Fragment && c.children.length === 0) ||
+          (c.type === Text && (c.children as string).trim() === ''))
+      )
+  );
+}
+
 const Trigger = defineComponent({
-  name: 'TPopupTrigger',
+  name: 'LePopupTrigger',
   props: {
     forwardRef: Function as PropType<(el: HTMLElement) => void>,
   },
@@ -65,9 +93,25 @@ const Trigger = defineComponent({
   },
 });
 export default defineComponent({
+  props: {
+    forwardRef: {
+      type: Function,
+      default: (e: HTMLElement) => e,
+    },
+  },
   setup(props, { slots }) {
-    const defaultSlotRef = ref();
-    onMounted(() => {});
-    return () => <>{slots.default ? slots.default() : ''}</>;
+    const triggerEl = ref();
+    return () => (
+      <Fragment>
+        <Trigger
+          forwardRef={(el: HTMLElement) => {
+            props.forwardRef(el);
+            triggerEl.value = el;
+          }}
+        >
+          {slots.default ? slots.default() : ''}
+        </Trigger>
+      </Fragment>
+    );
   },
 });

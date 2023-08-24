@@ -12,6 +12,12 @@ import {
 import { getDomClientRect } from '@/utils/tools/dom';
 import { containsValue } from '@/utils/tools';
 import Container from './container';
+import {
+  placementValues,
+  defaultPlacement,
+  defaultTrigger,
+  triggerValues,
+} from '@/components/props/popup';
 
 export default defineComponent({
   props: {
@@ -25,34 +31,22 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
-    // popup显示的条件
+    // popup触发方式
     trigger: {
       type: String,
-      default: 'hover',
+      validator(value: string) {
+        return triggerValues.indexOf(value) !== -1;
+      },
+      default: defaultTrigger,
     },
     // 位置
     placement: {
       type: String,
       // 参数限制
       validator(value: string) {
-        return (
-          [
-            'top',
-            'top-right',
-            'right-top',
-            'right',
-            'right-bottom',
-            'bottom-right',
-            'bottom',
-            'bottom-left',
-            'left-bottom',
-            'left',
-            'left-top',
-            'top-left',
-          ].indexOf(value) !== -1
-        );
+        return placementValues.indexOf(value) !== -1;
       },
-      default: 'bottom',
+      default: defaultPlacement,
     },
   },
   emits: ['update:modelValue', 'close'],
@@ -64,9 +58,9 @@ export default defineComponent({
     // 动画时长
     const animationDuration = 300; // 毫秒
     // popup元素
-    const popupRef = ref<HTMLDivElement>();
+    const popupRef = ref<HTMLElement>();
     // 触发popup的元素
-    const slotsDefaultRef = ref<HTMLDivElement>();
+    const triggerEl = ref<HTMLElement>();
     // 元素显示和隐藏
     const visibility = ref<'visible' | 'hidden'>(
       props.modelValue ? 'visible' : 'hidden'
@@ -106,9 +100,9 @@ export default defineComponent({
       if (
         visible.value &&
         popupRef.value &&
-        slotsDefaultRef.value &&
+        triggerEl.value &&
         !popupRef.value.contains(event.target as Node) &&
-        !slotsDefaultRef.value.contains(event.target as Node)
+        !triggerEl.value.contains(event.target as Node)
       ) {
         visible.value = false;
         popupHideEvent();
@@ -153,10 +147,7 @@ export default defineComponent({
     // 触发元素的点击事件
     const slotDefaultClick = (event: Event) => {
       if (props.trigger === 'click') {
-        if (
-          slotsDefaultRef.value &&
-          slotsDefaultRef.value.contains(event.target as Node)
-        ) {
+        if (triggerEl.value && triggerEl.value.contains(event.target as Node)) {
           popupStatusChange();
         }
       }
@@ -164,9 +155,9 @@ export default defineComponent({
 
     // 计算popup的位置
     const calculatePopupPosition = () => {
-      const dom = slotsDefaultRef.value;
-      if (dom && dom.children) {
-        const client: DOMRect | boolean = getDomClientRect(dom.children[0]);
+      const dom = triggerEl.value;
+      if (dom) {
+        const client: DOMRect | boolean = getDomClientRect(dom);
         const popupClient: DOMRect | boolean = getDomClientRect(popupRef.value);
         if (client) {
           const { placement } = props;
@@ -248,12 +239,17 @@ export default defineComponent({
     );
 
     onMounted(() => {
-      console.log(slots.default());
       window.addEventListener('click', popupEvent);
     });
 
     onBeforeUnmount(() => {
       window.removeEventListener('click', popupEvent);
+      // 销毁trigger的事件
+      if (triggerEl.value) {
+        triggerEl.value.onclick = null;
+        triggerEl.value.onmouseenter = null;
+        triggerEl.value.onmouseleave = null;
+      }
     });
 
     return () => (
@@ -281,16 +277,33 @@ export default defineComponent({
         ) : (
           ''
         )}
-        <div
-          ref={slotsDefaultRef}
-          onClick={slotDefaultClick}
-          onMouseenter={handleMouseEvent.bind(this, true)}
-          onMouseleave={handleMouseEvent.bind(this, false)}
+        <Container
+          forwardRef={(el: HTMLElement) => {
+            triggerEl.value = el;
+            // 事件绑定
+            if (triggerEl.value) {
+              // 点击
+              if (!triggerEl.value.onclick && props.trigger === 'click') {
+                triggerEl.value.onclick = slotDefaultClick;
+              }
+              // 鼠标移入
+              if (!triggerEl.value.onmouseenter && props.trigger === 'hover') {
+                triggerEl.value.onmouseenter = handleMouseEvent.bind(
+                  this,
+                  true
+                );
+              }
+              // 鼠标移出
+              if (!triggerEl.value.onmouseleave && props.trigger === 'hover') {
+                triggerEl.value.onmouseleave = handleMouseEvent.bind(
+                  this,
+                  false
+                );
+              }
+            }
+          }}
         >
           {slots.default ? slots.default() : ''}
-        </div>
-        <Container>
-          <div>你好</div>
         </Container>
       </>
     );
