@@ -1,0 +1,111 @@
+@import '@/style/flex.less';
+@import '@/style/var.less';
+.custom-input-global {
+  height: 100%;
+  .custom-input-box {
+    width: 100%;
+    transition: all 0.3s;
+    position: relative;
+    .da();
+    .cust-input {
+      height: 100%;
+      width: 100%;
+      flex: 1;
+      outline: none;
+      border: none;
+      padding-left: 12px;
+      background: transparent;
+      &::placeholder {
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+    .left-input-icon {
+      .da();
+    }
+    .custom-pwd-hide-button {
+      .da();
+      padding: 0 8px;
+      cursor: pointer;
+    }
+    .remember-select-box {
+      z-index: 200;
+      position: absolute;
+      top: 50px;
+      width: 100%;
+      box-shadow: 0 3px 14px 2px rgba(0, 0, 0, 0.05),
+        0 8px 10px 1px rgba(0, 0, 0, 6%), 0 5px 5px -3px rgba(0, 0, 0, 10%);
+      background: #ddd;
+      border-radius: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+      .line {
+        padding: 6px 12px;
+        font-weight: bold;
+        cursor: pointer;
+        .account {
+          color: var(--theme-color-4);
+        }
+        .password {
+          color: var(--theme-color-4);
+        }
+      }
+    }
+  }
+  .dark-input-box {
+    background: #181818;
+    border: 1px solid #393939;
+    &:focus-within {
+      border-color: #00f9f9;
+    }
+    .cust-input {
+      color: white;
+      &::placeholder {
+        color: #888fa1;
+      }
+    }
+  }
+  .light-input-box {
+    background: white;
+    border: 1px solid #ddd;
+    &:focus-within {
+      border-color: #00f9f9;
+    }
+    .cust-input {
+      color: var(--theme-color-4);
+      &::placeholder {
+        color: #ddd;
+      }
+    }
+  }
+  .opacity-input-box {
+    background: transparent;
+    border-color: transparent;
+  }
+  .custom-input-error {
+    border-color: #f05451 !important;
+    transition: all 0.3s;
+  }
+  .custom-input-rule {
+    color: #f05451;
+    font-weight: 400;
+    font-size: 12px;
+
+    line-height: 26px;
+    padding-left: 4px;
+    min-height: 26px;
+  }
+}
+
+//内容打开动画
+.remember-fade-enter-active {
+  transition: all 0.15s ease-out;
+}
+.remember-fade-leave-active {
+  transition: all 0.15s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.remember-fade-enter-from,
+.remember-fade-leave-to {
+  transform: translateY(-6px);
+  opacity: 0;
+}

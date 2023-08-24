@@ -18,6 +18,7 @@
     </div>
     <Popup></Popup>
     <ToolTip></ToolTip>
+    <Input></Input>
   </div>
 </template>
 
@@ -29,6 +30,7 @@ import Dialog from '@/example/dialog.vue';
 import Message from '@/example/message.vue';
 import Popup from '@/example/popup.vue';
 import ToolTip from '@/example/tooltip.vue';
+import Input from '@/example/input.vue';
 </script>
 
 <style lang="less">
