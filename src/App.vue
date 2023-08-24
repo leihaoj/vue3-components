@@ -20,6 +20,7 @@
     <ToolTip></ToolTip>
     <Input></Input>
     <Divider></Divider>
+    <BackTop></BackTop>
   </div>
 </template>
 
@@ -33,6 +34,7 @@ import Popup from '@/example/popup.vue';
 import ToolTip from '@/example/tooltip.vue';
 import Input from '@/example/input.vue';
 import Divider from '@/example/divider.vue';
+import BackTop from '@/example/backTop.vue';
 </script>
 
 <style lang="less">
