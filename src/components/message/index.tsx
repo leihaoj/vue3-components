@@ -1,21 +1,21 @@
-import './index.less';
-import { defineComponent, Transition, onMounted, ref } from 'vue';
-import CloseSvg from '@/assets/svg/close.svg';
-import SuccessSvg from '@/assets/svg/message/success.svg';
-import WarnSvg from '@/assets/svg/message/warn.svg';
-import InfoSvg from '@/assets/svg/message/info.svg';
-import ErrorSvg from '@/assets/svg/message/error.svg';
-import ProblemSvg from '@/assets/svg/message/problem.svg';
+import "./index.less";
+import { defineComponent, Transition, onMounted, ref } from "vue";
+import CloseSvg from "@/assets/svg/close.svg";
+import SuccessSvg from "@/assets/svg/message/success.svg";
+import WarnSvg from "@/assets/svg/message/warn.svg";
+import InfoSvg from "@/assets/svg/message/info.svg";
+import ErrorSvg from "@/assets/svg/message/error.svg";
+import ProblemSvg from "@/assets/svg/message/problem.svg";
 
 export default defineComponent({
   props: {
     content: {
       type: String,
-      default: '',
+      default: "",
     },
     type: {
       type: String,
-      default: 'warn',
+      default: "warn",
     },
     duration: {
       type: Number,
@@ -23,7 +23,7 @@ export default defineComponent({
     },
     destroyFn: {
       type: Function,
-      default: () => '',
+      default: () => "",
     },
     // 函数组件销毁时的操作
     index: {
@@ -31,6 +31,10 @@ export default defineComponent({
       default: 0,
     },
     clear: {
+      type: Boolean,
+      default: false,
+    },
+    close: {
       type: Boolean,
       default: false,
     },
@@ -85,15 +89,15 @@ export default defineComponent({
     // 获取消息的类型icon
     const getMessageIcon = () => {
       const { type } = props;
-      if (type == 'success') {
+      if (type == "success") {
         return <SuccessSvg></SuccessSvg>;
-      } else if (type == 'warn') {
+      } else if (type == "warn") {
         return <WarnSvg></WarnSvg>;
-      } else if (type == 'info') {
+      } else if (type == "info") {
         return <InfoSvg></InfoSvg>;
-      } else if (type == 'error') {
+      } else if (type == "error") {
         return <ErrorSvg></ErrorSvg>;
-      } else if (type == 'problem') {
+      } else if (type == "problem") {
         return <ProblemSvg></ProblemSvg>;
       }
     };
@@ -114,9 +118,13 @@ export default defineComponent({
         <div class="le-global-message" v-show={this.messageVisible}>
           <div class="le-message-type">{this.getMessageIcon()}</div>
           <div class="message-label">{this.$props.content}</div>
-          <div class="close-icon" onClick={this.onClose}>
-            <CloseSvg></CloseSvg>
-          </div>
+          {this.$props.close ? (
+            <div class="close-icon" onClick={this.onClose}>
+              <CloseSvg></CloseSvg>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       </Transition>
     );
