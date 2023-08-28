@@ -44,7 +44,7 @@ import BackTop from '@/components/backTop';
 <style lang="less">
 .back-top-box {
   width: 100%;
-  height: 500px;
+  height: 800px;
   overflow-y: auto;
   position: relative;
 }

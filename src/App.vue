@@ -41,7 +41,6 @@ import BackTop from '@/example/backTop.vue';
 #app {
   width: 100%;
   height: 100%;
-  overflow: hidden;
   .example {
     .dark {
       background-color: #333333;

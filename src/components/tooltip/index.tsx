@@ -31,6 +31,10 @@ export default defineComponent({
       },
       default: defaultPlacement,
     },
+    showArrow: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { slots }) {
@@ -42,6 +46,7 @@ export default defineComponent({
           v-slots={{
             body: () => props.content,
           }}
+          showArrow={props.showArrow}
         >
           {slots.default ? slots.default() : ''}
         </Popup>

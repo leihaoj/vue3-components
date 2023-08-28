@@ -48,6 +48,11 @@ export default defineComponent({
       },
       default: defaultPlacement,
     },
+    // 是否带箭头
+    showArrow: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['update:modelValue', 'close'],
   setup(props, { emit, slots }) {
@@ -226,11 +231,13 @@ export default defineComponent({
         if (v) {
           if (props.destroyOnClose) {
             popupLoad.value = true;
+            setTimeout(() => {
+              if (!popupX.value || !popupY.value) {
+                calculatePopupPosition();
+              }
+            }, 0);
           }
           closeAnimationTimeout();
-          setTimeout(() => {
-            calculatePopupPosition();
-          }, 0);
           visibility.value = 'visible';
         } else {
           popupHideEvent();
@@ -257,19 +264,22 @@ export default defineComponent({
         {popupLoad.value ? (
           <Teleport to={props.attach}>
             <Transition name="le-popup-transition">
-              <div
-                class={[
-                  'le-popup',
-                  visible.value ? 'le-popup-enter' : 'le-popup-leave',
-                ]}
-                ref={popupRef}
-                style={{
-                  transform: `translate(${popupX.value}px,${popupY.value}px)`,
-                  visibility: visibility.value,
-                }}
-              >
-                <div class="le-popup-content">
-                  {slots.body ? slots.body() : ''}
+              <div class={['le-popup', `le-popup-${props.placement}`]}>
+                <div
+                  class={[
+                    'le-popup-popper',
+                    visible.value ? 'le-popup-enter' : 'le-popup-leave',
+                  ]}
+                  ref={popupRef}
+                  style={{
+                    transform: `translate(${popupX.value}px,${popupY.value}px)`,
+                    visibility: visibility.value,
+                  }}
+                >
+                  <div class="le-popup-content">
+                    {slots.body ? slots.body() : ''}
+                    {props.showArrow ? <div class="le-popup__arrow"></div> : ''}
+                  </div>
                 </div>
               </div>
             </Transition>
@@ -301,6 +311,7 @@ export default defineComponent({
                 );
               }
             }
+            calculatePopupPosition();
           }}
         >
           {slots.default ? slots.default() : ''}

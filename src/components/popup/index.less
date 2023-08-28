@@ -1,14 +1,40 @@
 @import '@/style/var.less';
 .le-popup {
   position: absolute;
-  top: 0;
-  left: 0;
-  .le-popup-content {
-    padding: 12px;
-    background-color: white;
-    border-radius: 4px;
-    box-shadow: @box-shadow-4;
-    font-size: 14px;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  .le-popup-popper {
+    position: absolute;
+    margin: 0px;
+    .le-popup-content {
+      padding: 12px;
+      background-color: white;
+      border-radius: 4px;
+      box-shadow: @box-shadow-4;
+      font-size: 14px;
+    }
+  }
+}
+.le-popup-bottom {
+  .le-popup__arrow {
+    left: 50%;
+    margin-left: -4px;
+    top: -4px;
+    position: absolute;
+    z-index: 1;
+    width: 8px;
+    height: 8px;
+    &::before {
+      border-bottom-right-radius: 100%;
+      box-shadow: inset 0 0.5px 0 #dcdcdc, inset 0.5px 0 0 #dcdcdc;
+      position: absolute;
+      content: '';
+      width: 8px;
+      height: 8px;
+      transform: rotate(45deg);
+      background: white;
+    }
   }
 }
 .le-popup-enter {
