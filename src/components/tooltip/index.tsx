@@ -35,6 +35,10 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    className: {
+      type: String,
+      default: '',
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { slots }) {
@@ -47,6 +51,7 @@ export default defineComponent({
             body: () => props.content,
           }}
           showArrow={props.showArrow}
+          className={props.className}
         >
           {slots.default ? slots.default() : ''}
         </Popup>

@@ -53,6 +53,10 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    className: {
+      type: String,
+      default: '',
+    },
   },
   emits: ['update:modelValue', 'close'],
   setup(props, { emit, slots }) {
@@ -264,7 +268,13 @@ export default defineComponent({
         {popupLoad.value ? (
           <Teleport to={props.attach}>
             <Transition name="le-popup-transition">
-              <div class={['le-popup', `le-popup-${props.placement}`]}>
+              <div
+                class={[
+                  'le-popup',
+                  `le-popup-${props.placement}`,
+                  props.className,
+                ]}
+              >
                 <div
                   class={[
                     'le-popup-popper',
