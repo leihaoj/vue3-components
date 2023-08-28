@@ -39,6 +39,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    destroyOnClose: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { slots }) {
@@ -52,6 +56,7 @@ export default defineComponent({
           }}
           showArrow={props.showArrow}
           className={props.className}
+          destroyOnClose={props.destroyOnClose}
         >
           {slots.default ? slots.default() : ''}
         </Popup>
