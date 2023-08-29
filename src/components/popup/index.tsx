@@ -236,9 +236,10 @@ export default defineComponent({
           if (props.destroyOnClose) {
             popupLoad.value = true;
             setTimeout(() => {
-              if (!popupX.value || !popupY.value) {
-                calculatePopupPosition();
-              }
+              // if (!popupX.value || !popupY.value) {
+              //   calculatePopupPosition();
+              // }
+              calculatePopupPosition();
             }, 0);
           }
           closeAnimationTimeout();
